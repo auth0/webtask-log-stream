@@ -1,0 +1,24 @@
+{
+  "name": "webtask-log-stream",
+  "version": "1.0.0",
+  "description": "Stream interface for streaming webtask logs for node and the browser",
+  "main": "index.js",
+  "dependencies": {
+    "request-stream": "^1.2.2"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/auth0/webtask-log-stream"
+  },
+  "keywords": [
+  ],
+  "author": "Geoff Goodman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/auth0/webtask-log-stream/issues"
+  },
+  "homepage": "https://github.com/auth0/webtask-log-stream",
+  "browser": "browser.js"
+}
