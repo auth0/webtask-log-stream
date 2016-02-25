@@ -1,5 +1,5 @@
+var JSONStream = require('json-stream').JSONStream;
 var Request = require('request-stream');
-var Stream = require('stream');
 var Util = require('util');
 
 
@@ -33,20 +33,10 @@ function createStream(url, options) {
 function LogStream(options) {
     if (!options) options = {};
     
-    Stream.Transform.call(this, { readableObjectMode: true });
+    JSONStream.call(this, options);
 }
 
-Util.inherits(LogStream, Stream.Transform);
-
-LogStream.prototype._transform = function (chunk, encoding, cb) {
-    try {
-        var json = JSON.parse(chunk.toString('utf8'));
-        
-        cb(null, json);
-    } catch (e) {
-        cb(e);
-    }
-};
+Util.inherits(LogStream, JSONStream);
 
 LogStream.prototype.destroy = function () {
     this.emit('close');
