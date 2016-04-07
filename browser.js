@@ -19,30 +19,29 @@ function createStream(url, opts) {
         destroyed = true;
         rs.emit('close');
     };
-    
+
     connect(url, rs, opts);
-    
+
     return rs;
 }
 
 function connect(url, rs, options) {
     var timeout;
     var es = new window.EventSource(url);
-    var json = !!options.json;
-    
+
     rs.once('close', onClose);
 
     es.onopen = function() {
         rs.emit('open');
-        
+
         resetTimeout();
     };
-    
+
     es.addEventListener('ping', resetTimeout);
 
     es.onmessage = function(e) {
-        rs.push(decode(e.data, json));
-        
+        rs.push(decode(e.data));
+
         resetTimeout();
     };
 
@@ -53,13 +52,13 @@ function connect(url, rs, options) {
 
         if (rs.listeners('error').length) rs.emit('error', error);
     };
-    
+
     function onClose() {
         if (timeout) {
             clearTimeout(timeout);
             timeout = null;
         }
-        
+
         if (!es.readyState !== 2) {
             es.close();
         }
@@ -67,11 +66,11 @@ function connect(url, rs, options) {
 
     function onTimeout() {
         var error = new Error('Connection timed out');
-        
+
         error.code = 'E_TIMEDOUT';
-        
+
         rs.emit('error', error);
-        
+
         onClose();
     }
 
@@ -79,16 +78,15 @@ function connect(url, rs, options) {
         if (timeout) {
             clearTimeout(timeout);
         }
-        
+
         // Default to 20s timeout
         timeout = setTimeout(onTimeout, options.timeout || 20 * 1000);
     }
 }
 
-function decode(data, json) {
+function decode(data) {
     try {
-        if (json) return JSON.parse(data);
-        return data;
+        return JSON.parse(data);
     }
     catch (err) {
         return undefined;
