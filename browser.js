@@ -1,10 +1,9 @@
+'use strict';
+
 var Stream = require('stream');
 
 
-module.exports = createStream;
-
-
-function createStream(url, opts) {
+module.exports = function createStream(url, opts) {
     if (!opts) opts = {};
 
     var destroyed = false;
