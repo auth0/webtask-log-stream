@@ -1,10 +1,13 @@
 {
   "name": "webtask-log-stream",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Stream interface for streaming webtask logs for node and the browser",
   "main": "index.js",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {
-    "proxy-agent": "^2.0.0",
+    "proxy-agent": "^3.0.3",
     "request-stream": "^1.2.2"
   },
   "scripts": {},
