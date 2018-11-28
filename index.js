@@ -1,38 +1,37 @@
+'use strict';
+
 var ProxyAgent = require('proxy-agent');
 var Request = require('request-stream');
 var Stream = require('stream');
 var Util = require('util');
 
-
-module.exports = createStream;
-
-
-function createStream(url, options) {
+module.exports = function createStream(url, options) {
     if (!options) options = {};
 
     var proxyUri = process.env.HTTP_PROXY || process.env.http_proxy;
-    var agent = proxyUri
-        ?   new ProxyAgent(proxyUri)
-        :   undefined;
+    var agent = proxyUri ? new ProxyAgent(proxyUri) : undefined;
     var stream = new LogStream(options);
-    var req = Request.get(url, {
-        agent,
-        headers: {
-            'Accept': 'text/event-stream',
+    var req = Request.get(
+        url,
+        {
+            agent,
+            headers: {
+                Accept: 'text/event-stream',
+            },
         },
-    },onResponse);
+        onResponse
+    );
 
-    req.once('close', function () {
+    req.once('close', function() {
         stream.emit('error', new Error('Connection closed'));
         stream.destroy();
     });
 
-    req.once('socket', function () {
+    req.once('socket', function() {
         stream.emit('open');
     });
 
     return stream;
-
 
     function onResponse(err, res) {
         if (err) {
@@ -43,7 +42,7 @@ function createStream(url, options) {
 
         res.pipe(stream);
     }
-}
+};
 
 function LogStream(options) {
     if (!options) options = {};
@@ -56,7 +55,7 @@ function LogStream(options) {
 
 Util.inherits(LogStream, Stream.Transform);
 
-LogStream.prototype._flush = function (cb) {
+LogStream.prototype._flush = function(cb) {
     if (this._event) this.push(this._event);
 
     return cb();
@@ -80,7 +79,7 @@ LogStream.prototype._transform = function(chunk, encoding, cb) {
 
             if (matches) {
                 if (!this._event) {
-                    this._event = { event: 'data', };
+                    this._event = { event: 'data' };
                 }
 
                 if (matches[1]) {
@@ -94,7 +93,7 @@ LogStream.prototype._transform = function(chunk, encoding, cb) {
                 if (this._event.event === 'data') {
                     try {
                         this.push(JSON.parse(this._event.data));
-                    } catch (__) { }
+                    } catch (__) {}
                 }
 
                 this._event = null;
@@ -111,7 +110,7 @@ LogStream.prototype._transform = function(chunk, encoding, cb) {
     return cb();
 };
 
-LogStream.prototype.destroy = function () {
+LogStream.prototype.destroy = function() {
     this.emit('close');
     this.unpipe();
 };

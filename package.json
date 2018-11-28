@@ -22,5 +22,8 @@
     "url": "https://github.com/auth0/webtask-log-stream/issues"
   },
   "homepage": "https://github.com/auth0/webtask-log-stream",
-  "browser": "browser.js"
+  "browser": "browser.js",
+  "devDependencies": {
+    "eslint": "^4.12.1"
+  }
 }
